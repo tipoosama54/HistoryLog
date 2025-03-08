@@ -75,7 +75,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbykY-aZ1-r-saZXJ0iZ8DGvc7nbt8w0N549r4GkTuEaXx7kSrmm8HKemZl67fOG9WQ4SQ/exec";
+            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxZZsKEU4Y9MQNFZjHCIXCSef7snSz99JEUxnEHCwJSfoVAz_mIcwr4D43qYDsIjhQ8cg/exec";
             let tableBody = document.querySelector("#attendance-table tbody");
 
             function formatDate(dateString) {
@@ -87,7 +87,7 @@
             function formatTime(timeString) {
                 if (!timeString) return "-";
                 let time = new Date(timeString);
-                return isNaN(time) ? timeString : time.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                return isNaN(time) ? timeString : time.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
             }
 
             function fetchAttendanceData() {
