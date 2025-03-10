@@ -16,6 +16,18 @@
         .container {
             margin-top: 20px;
         }
+        label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
         table {
             width: 80%;
             margin: 20px auto;
@@ -56,7 +68,13 @@
 <body>
 
     <h2>سجل الحضور والانصراف</h2>
+    
     <div class="container">
+        <label for="name-filter">اختر الاسم:</label>
+        <select id="name-filter">
+            <option value="all">عرض الكل</option>
+        </select>
+
         <table id="attendance-table">
             <thead>
                 <tr>
@@ -69,14 +87,16 @@
             </thead>
             <tbody></tbody>
         </table>
+
         <button id="download-excel">📥 تحميل كـ Excel</button>
-        <button id="logout" class="logout-btn"> تسجيل الخروج</button>
+        <button id="logout" class="logout-btn">تسجيل الخروج</button>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzsSCz5-4_qyXz2liSkbcF35oskqkDA8VgkCY8gMJ2knQmM9egk1eq2ymViCrmcqFlvMA/exec";
+            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby924b7H5fEnF-tSC-dIeliMchPG0SPgCsGLvZVhdwL2CXxFh2Mh5WtSF6y7x5WMXJZCQ/exec";
             let tableBody = document.querySelector("#attendance-table tbody");
+            const nameFilter = document.getElementById("name-filter");
 
             function formatDate(dateString) {
                 if (!dateString) return "-";
@@ -101,6 +121,7 @@
                     }
 
                     tableBody.innerHTML = "";
+                    let names = [];
 
                     data.forEach(row => {
                         let newRow = tableBody.insertRow();
@@ -109,10 +130,40 @@
                         newRow.insertCell(2).innerText = formatDate(row[2]);
                         newRow.insertCell(3).innerText = formatTime(row[3]);
                         newRow.insertCell(4).innerText = formatTime(row[4]);
+
+                        names.push(row[0]); 
                     });
+
+                    updateDropdown(names);
                 })
                 .catch(error => console.error("⚠️ Fetch Error:", error));
             }
+
+            function updateDropdown(names) {
+                let uniqueNames = [...new Set(names)];
+                nameFilter.innerHTML = '<option value="all">عرض الكل</option>'; 
+
+                uniqueNames.forEach(name => {
+                    let option = document.createElement("option");
+                    option.value = name;
+                    option.textContent = name;
+                    nameFilter.appendChild(option);
+                });
+            }
+
+            nameFilter.addEventListener("change", function() {
+                let selectedName = nameFilter.value;
+                let rows = document.querySelectorAll("#attendance-table tbody tr");
+
+                rows.forEach(row => {
+                    let nameCell = row.cells[0].textContent;
+                    if (selectedName === "all" || nameCell === selectedName) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
 
             function downloadExcel() {
                 let wb = XLSX.utils.book_new();
@@ -129,9 +180,9 @@
             function logout() {
                 localStorage.clear();
                 sessionStorage.clear();
-
                 window.location.href = "index.html"; 
             }
+
             setTimeout(function() {
                 location.reload();
             }, 60000);
