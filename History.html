@@ -75,7 +75,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxz-HLjkPCsgcZ9h2q_abmLm3RAMBfV4yloJZOKeyrfMctjfcfRNWAZmOJyKXTl8gn5RA/exec";
+            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzsSCz5-4_qyXz2liSkbcF35oskqkDA8VgkCY8gMJ2knQmM9egk1eq2ymViCrmcqFlvMA/exec";
             let tableBody = document.querySelector("#attendance-table tbody");
 
             function formatDate(dateString) {
@@ -132,7 +132,10 @@
 
                 window.location.href = "index.html"; 
             }
-
+            setTimeout(function() {
+                location.reload();
+            }, 60000);
+            
             document.getElementById("download-excel").addEventListener("click", downloadExcel);
             document.getElementById("logout").addEventListener("click", logout);
 
